@@ -1,21 +1,21 @@
 // Elements
-const tasksList = document.querySelector("#tasks-list")
-const addTaskForm = document.querySelector("form#add-task")
-const addTaskInput = document.querySelector("#add-task-input")
-const clearAllTasksBtn = document.querySelector("button#clear-all-tasks")
+const tasksList = document.querySelector("#tasks-list");
+const addTaskForm = document.querySelector("form#add-task");
+const addTaskInput = document.querySelector("#add-task-input");
+const clearAllTasksBtn = document.querySelector("button#clear-all-tasks");
 
 // Total List Of Tasks
-let list = JSON.parse(localStorage.getItem("tasks")) || []
+let list = JSON.parse(localStorage.getItem("tasks")) || [];
 
 /**
  * Show All Tasks From Local Storage In Page
  */
 function showTasksList() {
-  tasksList.innerHTML = ""
-  const list = JSON.parse(localStorage.getItem("tasks")) || []
+  tasksList.innerHTML = "";
+  const list = JSON.parse(localStorage.getItem("tasks")) || [];
 
   if (list.length === 0) {
-    clearAllTasksBtn.disabled = true
+    clearAllTasksBtn.disabled = true;
 
     const element = String.raw`
 			<div class="ui icon warning message">
@@ -25,117 +25,117 @@ function showTasksList() {
 					<div>Enter your tasks today above.</div>
 				</div>
 			</div>
-		`
+		`;
 
-    tasksList.style.border = "none"
-    return tasksList.insertAdjacentHTML("beforeend", element)
+    tasksList.style.border = "none";
+    return tasksList.insertAdjacentHTML("beforeend", element);
   }
 
-  clearAllTasksBtn.disabled = false
-  tasksList.style.border = "1px solid rgba(34,36,38,.15)"
-  list.reverse().forEach(task => {
+  clearAllTasksBtn.disabled = false;
+  tasksList.style.border = "1px solid rgba(34,36,38,.15)";
+  list.reverse().forEach((task) => {
     const element = String.raw`
 				<li class="ui segment grid equal width">
-					<div class="ui checkbox column">
-						<input type="checkbox" ${task.completed ? "checked" : ""}>
+					<div class="newtask">
+						<input type="checkbox" >
 						<label>${task.text}</label>
 					</div>
 					<div class="column">
-						<i data-id="${task.id}" class="edit outline icon"></i>
-						<i data-id="${task.id}" class="trash alternate outline remove icon"></i>
+            <span data-id="${task.id}" class="edit outline icon">Update</span>
+            <span data-id="${task.id}" class="trash alternate outline remove icon">Delete</span>
 					</div>
 				</li>
-			`
+			`;
 
-    tasksList.insertAdjacentHTML("beforeend", element)
-  })
+    tasksList.insertAdjacentHTML("beforeend", element);
+  });
 
-  document.querySelectorAll(`li i.edit`).forEach(item => {
-    item.addEventListener("click", e => {
-      e.stopPropagation()
-      showEditModal(+e.target.dataset.id)
-    })
-  })
+  document.querySelectorAll(`li span.edit`).forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showEditModal(+e.target.dataset.id);
+    });
+  });
 
-  document.querySelectorAll(`li i.trash`).forEach(item => {
-    item.addEventListener("click", e => {
-      e.stopPropagation()
-      showRemoveModal(+e.target.dataset.id)
-    })
-  })
+  document.querySelectorAll(`li span.trash`).forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showRemoveModal(+e.target.dataset.id);
+    });
+  });
 }
 
 /**
  * Add new task to local storage
  */
 function addTask(event) {
-  event.preventDefault()
+  event.preventDefault();
 
-  const taskText = addTaskInput.value
+  const taskText = addTaskInput.value;
   if (taskText.trim().length === 0) {
-    return (addTaskInput.value = "")
+    return (addTaskInput.value = "");
   }
 
   list.push({
     id: list.length + 1,
     text: taskText,
     completed: false,
-  })
-  localStorage.setItem("tasks", JSON.stringify(list))
-  addTaskInput.value = ""
+  });
+  localStorage.setItem("tasks", JSON.stringify(list));
+  addTaskInput.value = "";
 
-  showNotification("success", "Task was successfully added")
-  showTasksList()
+  showNotification("success", "Task was successfully added");
+  showTasksList();
 }
 
 // Change Complete State
 function completeTask(id) {
   // Get Task
-  const taskIndex = list.findIndex(t => t.id == id)
-  const task = list[taskIndex]
+  const taskIndex = list.findIndex((t) => t.id == id);
+  const task = list[taskIndex];
 
   // Change State
-  task.completed = !task.completed
-  list[taskIndex] = task
+  task.completed = !task.completed;
+  list[taskIndex] = task;
 
   // Save Changes
-  localStorage.setItem("tasks", JSON.stringify(list))
-  showTasksList()
+  localStorage.setItem("tasks", JSON.stringify(list));
+  showTasksList();
 }
 
 /**
  * Remove task
  */
 function removeTask(id) {
-  list = list.filter(t => t.id !== id)
-  localStorage.setItem("tasks", JSON.stringify(list))
+  list = list.filter((t) => t.id !== id);
+  localStorage.setItem("tasks", JSON.stringify(list));
 
-  showNotification("error", "Task was successfully deleted")
-  showTasksList()
+  showNotification("error", "Task was successfully deleted");
+  showTasksList();
 }
 
 /**
  * Edit task
  */
 function editTask(id) {
-  const taskText = document.querySelector("#task-text").value
+  const taskText = document.querySelector("#task-text").value;
 
-  if (taskText.trim().length === 0) return
-  const taskIndex = list.findIndex(t => t.id == id)
+  if (taskText.trim().length === 0) return;
+  const taskIndex = list.findIndex((t) => t.id == id);
 
-  list[taskIndex].text = taskText
-  localStorage.setItem("tasks", JSON.stringify(list))
+  list[taskIndex].text = taskText;
+  localStorage.setItem("tasks", JSON.stringify(list));
 
-  showNotification("success", "Task was successfully updated")
-  showTasksList()
+  showNotification("success", "Task was successfully updated");
+  showTasksList();
 }
 
 // Clear All Tasks
 function clearAllTasks() {
   if (list.length > 0) {
-    list = []
-    localStorage.setItem("tasks", JSON.stringify(list))
-    return showTasksList()
+    list = [];
+    localStorage.setItem("tasks", JSON.stringify(list));
+    return showTasksList();
   }
 
   new Noty({
@@ -146,16 +146,16 @@ function clearAllTasks() {
     progressBar: true,
     closeWith: ["click"],
     theme: "metroui",
-  }).show()
+  }).show();
 }
 
 // Clear Complete Tasks
 function clearCompleteTasks() {
   if (list.length > 0) {
     if (confirm("Are you sure?")) {
-      const filteredTasks = list.filter(t => t.completed !== true)
-      localStorage.setItem("tasks", JSON.stringify(filteredTasks))
-      return showTasksList()
+      const filteredTasks = list.filter((t) => t.completed !== true);
+      localStorage.setItem("tasks", JSON.stringify(filteredTasks));
+      return showTasksList();
     }
   }
 
@@ -167,36 +167,37 @@ function clearCompleteTasks() {
     position: "left",
     backgroundColor: "linear-gradient(to right, #e45757, #d44747)",
     stopOnFocus: true,
-  }).showToast()
+  }).showToast();
 }
 
 // Show Edit Modal And Pass Data
 function showEditModal(id) {
-  const taskIndex = list.findIndex(t => t.id == id)
-  const { text } = list[taskIndex]
+  const taskIndex = list.findIndex((t) => t.id == id);
+  const { text } = list[taskIndex];
 
-  document.querySelector("#edit-modal .content #task-id").value = id
-  document.querySelector("#edit-modal .content #task-text").value = text.trim()
+  document.querySelector("#edit-modal .content #task-id").value = id;
+  document.querySelector("#edit-modal .content #task-text").value = text.trim();
   document
     .querySelector("#update-button")
-    .addEventListener("click", () => editTask(+id))
+    .addEventListener("click", () => editTask(+id));
 
-  $("#edit-modal.modal").modal("show")
+  $("#edit-modal.modal").modal("show");
 }
 
 // Show Remove Modal
 function showRemoveModal(id) {
-  document
-    .querySelector("#remove-button")
-    .addEventListener("click", () => removeTask(+id))
+  document.querySelector("#remove-button").addEventListener("click", (e) => {
+    removeTask(+id);
+    console.log(+id);
+  });
 
-  $("#remove-modal.modal").modal("show")
+  $("#remove-modal.modal").modal("show");
 }
 
 // Show Clear All Tasks Modal
 function showClearAllTasksModal() {
   if (list.length > 0) {
-    return $("#clear-all-tasks-modal.modal").modal("show")
+    return $("#clear-all-tasks-modal.modal").modal("show");
   }
 
   new Noty({
@@ -207,7 +208,7 @@ function showClearAllTasksModal() {
     progressBar: true,
     closeWith: ["click"],
     theme: "metroui",
-  }).show()
+  }).show();
 }
 
 function showNotification(type, text) {
@@ -219,11 +220,33 @@ function showNotification(type, text) {
     progressBar: true,
     closeWith: ["click"],
     theme: "metroui",
-  }).show()
+  }).show();
 }
 
 // Event Listeners
-addTaskForm.addEventListener("submit", addTask)
-window.addEventListener("load", () => addTaskInput.focus())
+addTaskForm.addEventListener("submit", addTask);
+window.addEventListener("load", () => addTaskInput.focus());
 
-showTasksList()
+showTasksList();
+
+// to remove completed task
+
+tasksList.addEventListener("click", (e) => {
+  const checkboxes = document.querySelectorAll('.newtask input[type="checkbox"]');
+
+  checkboxes.forEach((box) => {
+    if (box.checked) {
+      let completedTask = box.nextElementSibling.textContent;
+      list.forEach((t) => {
+        if (t.text === completedTask) {
+          t.completed = true;
+          localStorage.setItem("tasks", JSON.stringify(list));
+        }
+      });
+      // removing completed tasks
+      const newTaskList = list.filter((t) => t.completed !== true);
+      localStorage.setItem("tasks", JSON.stringify(newTaskList));
+    }
+  });
+  showTasksList();
+});

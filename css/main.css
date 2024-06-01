@@ -15,13 +15,26 @@
 	margin: 0;
 	box-sizing: border-box;
 }
+
 body {
 	color: var(--dark);
 	background: var(--secondary);
 	font-family: 'Lato', sans-serif;
 }
-.ui.grid + .grid {
+
+.ui.grid+.grid {
 	margin-top: 0;
+	display: flex;
+	align-items: center;
+}
+
+.newtask {
+	margin-top: 0;
+	display: flex;
+	align-items: center;
+}
+.newtask input{
+	margin-right: 0.5em;
 }
 
 /* Classes */
@@ -29,9 +42,11 @@ body::-webkit-scrollbar {
 	background-color: var(--secondary);
 	width: 16px;
 }
+
 body::-webkit-scrollbar-track {
 	background-color: var(--secondary);
 }
+
 body::-webkit-scrollbar-thumb {
 	background-color: var(--gray);
 	border-radius: 16px;
@@ -52,6 +67,7 @@ body::-webkit-scrollbar-thumb {
 	margin: 0 auto;
 	margin-top: 2rem;
 }
+
 #add-task input {
 	margin: 1.5rem auto;
 }
@@ -69,23 +85,34 @@ body::-webkit-scrollbar-thumb {
 	width: 70%;
 	list-style: none;
 }
+
 #tasks-list li {
 	width: 100%;
 }
+
 #tasks-list li .remove,
 #tasks-list li .edit {
-	opacity: 0;
-	transition: all 0.3s ease;
+	/* opacity: 0;
+	transition: all 0.3s ease; */
+	/* background-color: red; */
+	margin-right: 30px;
+	padding: 1em;
+	font-size: 1.2rem;
+	font-weight: 700;
 }
-#tasks-list li:hover .remove,
+
+/* #tasks-list li:hover .remove,
 #tasks-list li:hover .edit {
 	opacity: 1;
-}
+} */
 #tasks-list li .column:last-child {
+	margin-right: 10px;
 	text-align: right;
 }
-#tasks-list li i {
+
+#tasks-list li span {
 	cursor: pointer !important;
+	font-size: 2rem;
 }
 
 /* Alert */
@@ -98,6 +125,7 @@ body::-webkit-scrollbar-thumb {
 	border-radius: 10px;
 	line-height: 1.6rem;
 }
+
 .alert-warning {
 	color: #856404;
 	background-color: #fff3cd;
@@ -111,9 +139,11 @@ body::-webkit-scrollbar-thumb {
 	border-radius: 0.28571429rem;
 	box-shadow: 0 0 0 1px var(--green) inset, 0 0 0 0 transparent;
 }
+
 .noty_theme__metroui.noty_type__error {
 	background: none;
 }
+
 .noty_theme__metroui.noty_bar.noty_type__error .noty_body {
 	background: var(--red);
 	color: var(--white);
@@ -123,6 +153,7 @@ body::-webkit-scrollbar-thumb {
 
 /* Responsive */
 @media screen and (max-width: 770px) {
+
 	#add-task,
 	#buttons,
 	#tasks-list {
